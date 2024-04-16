@@ -221,8 +221,6 @@ describe("DELETE /api/users/current", () => {
       .delete("/api/users/current")
       .set("X-API-TOKEN", "salah");
 
-    const user = UserTest.get();
-
     logger.debug(response);
     expect(response.status).toBe(401);
     expect(response.body.errors).toBeDefined();

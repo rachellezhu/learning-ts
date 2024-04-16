@@ -114,7 +114,7 @@ Response Body {failed} :
 
 ## Delete Contact
 
-Endpoint : DELET /api/contacts/:idContact
+Endpoint : DELETE /api/contacts/:idContact
 
 Request Header :
 
