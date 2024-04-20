@@ -1,8 +1,6 @@
 import { Contact, User } from "@prisma/client";
 import { prismaClient } from "../src/application/database";
 import bcrypt from "bcrypt";
-import { v4 as uuid } from "uuid";
-import { toContactResponse } from "../src/model/contact-model";
 
 export class UserTest {
   static async delete() {
