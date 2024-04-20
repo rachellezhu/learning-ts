@@ -2,6 +2,7 @@ import { Contact, User } from "@prisma/client";
 import { prismaClient } from "../src/application/database";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
+import { toContactResponse } from "../src/model/contact-model";
 
 export class UserTest {
   static async delete() {
@@ -40,14 +41,30 @@ export class UserTest {
 
 export class ContactTest {
   static async create() {
-    await prismaClient.contact.create({
-      data: {
-        first_name: "test",
-        last_name: "test",
-        email: "test@example.com",
-        phone: "0898989",
-        username: "test",
-      },
+    await prismaClient.contact.createMany({
+      data: [
+        {
+          first_name: "test",
+          last_name: "test",
+          email: "test@example.com",
+          phone: "0898989",
+          username: "test",
+        },
+        {
+          first_name: "test1",
+          last_name: "test1",
+          email: "test1@example.com",
+          phone: "08989891",
+          username: "test",
+        },
+        {
+          first_name: "test2",
+          last_name: "test2",
+          email: "test2@example.com",
+          phone: "08989892",
+          username: "test",
+        },
+      ],
     });
   }
 
@@ -55,6 +72,7 @@ export class ContactTest {
     const contact = await prismaClient.contact.findFirst({
       where: {
         username: "test",
+        first_name: "test",
       },
     });
 
@@ -66,10 +84,17 @@ export class ContactTest {
   }
 
   static async deleteAll() {
-    await prismaClient.contact.deleteMany({
+    await prismaClient.contact.deleteMany();
+  }
+
+  static async search(id: number, username: string): Promise<Contact> {
+    const contact = await prismaClient.contact.findFirst({
       where: {
-        username: "test",
+        id: id,
+        username: username,
       },
     });
+
+    return contact!;
   }
 }
