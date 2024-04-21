@@ -21,20 +21,20 @@ describe("POST /api/contacts/:contactId/addresses/", () => {
       .post(`/api/contacts/${contact.id}/addresses`)
       .set("X-API-TOKEN", "test")
       .send({
-        street: "Jalan Slamet Riyadi 267",
-        city: "Sukoharjo",
-        province: "Jawa Tengah",
+        street: "Jalan",
+        city: "Kota",
+        province: "Provinsi",
         country: "Indonesia",
-        postal_code: "57163",
+        postal_code: "111111",
       });
 
     logger.debug(response);
     expect(response.status).toBe(200);
-    expect(response.body.data.street).toBe("Jalan Slamet Riyadi 267");
-    expect(response.body.data.city).toBe("Sukoharjo");
-    expect(response.body.data.province).toBe("Jawa Tengah");
+    expect(response.body.data.street).toBe("Jalan");
+    expect(response.body.data.city).toBe("Kota");
+    expect(response.body.data.province).toBe("Provinsi");
     expect(response.body.data.country).toBe("Indonesia");
-    expect(response.body.data.postal_code).toBe("57163");
+    expect(response.body.data.postal_code).toBe("111111");
   });
 
   it("Should reject create new address if request is invalid", async () => {
@@ -43,9 +43,9 @@ describe("POST /api/contacts/:contactId/addresses/", () => {
       .post(`/api/contacts/${contact.id}/addresses`)
       .set("X-API-TOKEN", "test")
       .send({
-        street: "Jalan Slamet Riyadi 267",
-        city: "Sukoharjo",
-        province: "Jawa Tengah",
+        street: "Jalan",
+        city: "Kota",
+        province: "Provinsi",
         country: "",
         postal_code: "",
       });
@@ -61,11 +61,11 @@ describe("POST /api/contacts/:contactId/addresses/", () => {
       .post(`/api/contacts/${contact.id + 123}/addresses`)
       .set("X-API-TOKEN", "test")
       .send({
-        street: "Jalan Slamet Riyadi 267",
-        city: "Sukoharjo",
-        province: "Jawa Tengah",
+        street: "Jalan",
+        city: "Kota",
+        province: "Provinsi",
         country: "Indonesia",
-        postal_code: "57163",
+        postal_code: "111111",
       });
 
     logger.debug(response);
