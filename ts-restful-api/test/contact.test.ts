@@ -82,7 +82,7 @@ describe("GET /api/contacts/:contactId", () => {
       .set("X-API-TOKEN", "test");
 
     logger.debug(response.body);
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(404);
     expect(response.error).toBeDefined();
   });
 });
@@ -119,7 +119,7 @@ describe("PUT /api/contacts/:contactId", () => {
     expect(response.body.data.phone).toBe("089");
   });
 
-  it("Should not be able to update the contact if the form is blank", async () => {
+  it("Should not be able to update the contact if the request is invalid", async () => {
     const contact = await ContactTest.get();
     const response = await supertest(web)
       .put(`/api/contacts/${contact.id}`)
@@ -168,7 +168,7 @@ describe("DELETE /api/contacts/:contactId", () => {
       .set("X-API-TOKEN", "test");
 
     logger.debug(response);
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(404);
     expect(response.body.errors).toBeDefined();
   });
 });

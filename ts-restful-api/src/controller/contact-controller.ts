@@ -1,12 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import {
   CreateContactRequest,
   SearchContactRequest,
   UpdateContactRequest,
 } from "../model/contact-model";
 import { ContactService } from "../service/contact-service";
-import { User } from "@prisma/client";
-import { UserService } from "../service/user-service";
 import { UserRequest } from "../type/user-request";
 import { logger } from "../application/logging";
 
