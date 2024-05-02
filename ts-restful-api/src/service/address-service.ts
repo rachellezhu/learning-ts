@@ -8,6 +8,7 @@ import { Validation } from "../validation/validation";
 import { AddressValidation } from "../validation/address-validation";
 import { ContactService } from "./contact-service";
 import { prismaClient } from "../application/database";
+import { ResponseError } from "../error/response-error";
 
 export class AddressService {
   static async create(
@@ -30,7 +31,31 @@ export class AddressService {
     return toAddressResponse(address);
   }
 
-  static async get() {}
+  static async get(
+    user: User,
+    contactId: number,
+    addressId: number
+  ): Promise<AddressResponse> {
+    const contact = await ContactService.checkContactMustExist(
+      user.username,
+      contactId
+    );
+
+    console.log(contactId);
+
+    const result = await prismaClient.address.findFirst({
+      where: {
+        id: addressId,
+        contact_id: contact.id,
+      },
+    });
+
+    if (!result) {
+      throw new ResponseError(404, "Address is not found");
+    }
+
+    return toAddressResponse(result);
+  }
 
   static async update() {}
 

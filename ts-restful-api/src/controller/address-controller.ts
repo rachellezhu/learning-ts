@@ -18,4 +18,21 @@ export class AddressController {
       next(error);
     }
   }
+
+  static async get(req: UserRequest, res: Response, next: NextFunction) {
+    try {
+      const contact_id = Number(req.params.contactId);
+      const address_id = Number(req.params.addressId);
+      const response = await AddressService.get(
+        req.user!,
+        contact_id,
+        address_id
+      );
+      res.status(200).json({
+        data: response,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }

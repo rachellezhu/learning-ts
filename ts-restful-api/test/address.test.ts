@@ -73,3 +73,54 @@ describe("POST /api/contacts/:contactId/addresses/", () => {
     expect(response.body.errors).toBeDefined();
   });
 });
+
+describe("GET /api/contacts/:contactId/addresses/:addressId", () => {
+  beforeEach(async () => {
+    await UserTest.create();
+    await ContactTest.create();
+    await AddressTest.create();
+  });
+
+  afterEach(async () => {
+    await AddressTest.deleteAll();
+    await ContactTest.deleteAll();
+    await UserTest.delete();
+  });
+
+  it("Should be able to get address by contactId and addressId", async () => {
+    const address = await AddressTest.get();
+    const response = await supertest(web)
+      .get(`/api/contacts/${address.contact_id}/addresses/${address.id}`)
+      .set("X-API-TOKEN", "test");
+
+    logger.debug(response);
+    expect(response.status).toBe(200);
+    expect(response.body.data.street).toBe("Jalan");
+    expect(response.body.data.city).toBe("Kota");
+    expect(response.body.data.province).toBe("Provinsi");
+    expect(response.body.data.country).toBe("Negara");
+    expect(response.body.data.postal_code).toBe("123123");
+  });
+
+  it("Should not be able to get address with unregistered contact given", async () => {
+    const address = await AddressTest.get();
+    const response = await supertest(web)
+      .get(`/api/contacts/${address.contact_id + 123}/addresses/${address.id}`)
+      .set("X-API-TOKEN", "test");
+
+    logger.debug(response);
+    expect(response.status).toBe(404);
+    expect(response.body.errors).toBeDefined();
+  });
+
+  it("Should not be able to get address with unregistered address given", async () => {
+    const address = await AddressTest.get();
+    const response = await supertest(web)
+      .get(`/api/contacts/${address.contact_id}/addresses/${address.id + 123}`)
+      .set("X-API-TOKEN", "test");
+
+    logger.debug(response);
+    expect(response.status).toBe(404);
+    expect(response.body.errors).toBeDefined();
+  });
+});
