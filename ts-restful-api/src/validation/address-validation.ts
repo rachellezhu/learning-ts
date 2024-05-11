@@ -18,12 +18,4 @@ export class AddressValidation {
     country: z.string().min(1).max(100),
     postal_code: z.string().min(1).max(10),
   });
-
-  static readonly SEARCH: ZodType = z.object({
-    name: z.string().min(1),
-    email: z.string().min(1),
-    phone: z.string().min(1),
-    page: z.number().min(1).positive(),
-    size: z.number().min(1).max(100).positive(),
-  });
 }

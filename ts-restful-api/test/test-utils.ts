@@ -1,7 +1,6 @@
 import { Address, Contact, User } from "@prisma/client";
 import { prismaClient } from "../src/application/database";
 import bcrypt from "bcrypt";
-import { toAddressResponse } from "../src/model/address-model";
 
 export class UserTest {
   static async delete() {
