@@ -1,7 +1,8 @@
-import { User } from "@prisma/client";
+import { Address, User } from "@prisma/client";
 import {
   AddressResponse,
   CreateAddressRequest,
+  UpdateAddressRequest,
   toAddressResponse,
 } from "../model/address-model";
 import { Validation } from "../validation/validation";
@@ -31,35 +32,87 @@ export class AddressService {
     return toAddressResponse(address);
   }
 
+  static async checkAddressMustExist(
+    addressId: number,
+    contactId: number,
+    username: string
+  ): Promise<Address> {
+    await ContactService.checkContactMustExist(username, contactId);
+
+    const address = await prismaClient.address.findFirst({
+      where: {
+        id: addressId,
+        contact_id: contactId,
+      },
+    });
+
+    if (!address) {
+      throw new ResponseError(404, "Address is not found");
+    }
+
+    return address;
+  }
+
   static async get(
     user: User,
     contactId: number,
     addressId: number
   ): Promise<AddressResponse> {
-    const contact = await ContactService.checkContactMustExist(
-      user.username,
-      contactId
+    const address = await this.checkAddressMustExist(
+      addressId,
+      contactId,
+      user.username
     );
 
-    console.log(contactId);
+    return toAddressResponse(address);
+  }
 
-    const result = await prismaClient.address.findFirst({
+  static async update(
+    request: UpdateAddressRequest,
+    user: User,
+    contactId: number
+  ): Promise<AddressResponse> {
+    const updateRequest = Validation.validate(
+      AddressValidation.UPDATE,
+      request
+    );
+
+    await this.checkAddressMustExist(request.id, contactId, user.username);
+
+    const address = await prismaClient.address.update({
       where: {
-        id: addressId,
-        contact_id: contact.id,
+        id: request.id,
+        contact_id: contactId,
+      },
+      data: updateRequest,
+    });
+
+    return toAddressResponse(address);
+  }
+
+  static async delete(
+    user: User,
+    addressId: number,
+    contactId: number
+  ): Promise<string> {
+    await this.checkAddressMustExist(addressId, contactId, user.username);
+
+    await prismaClient.address.delete({
+      where: { id: addressId, contact_id: contactId },
+    });
+
+    return "OK";
+  }
+
+  static async list(user: User, contactId: number): Promise<Array<Address>> {
+    await ContactService.checkContactMustExist(user.username, contactId);
+
+    const addresses = await prismaClient.address.findMany({
+      where: {
+        contact_id: contactId,
       },
     });
 
-    if (!result) {
-      throw new ResponseError(404, "Address is not found");
-    }
-
-    return toAddressResponse(result);
+    return addresses;
   }
-
-  static async update() {}
-
-  static async delete() {}
-
-  static async list() {}
 }

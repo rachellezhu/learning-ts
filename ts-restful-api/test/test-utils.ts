@@ -106,15 +106,41 @@ export class AddressTest {
   static async create() {
     const contact = await ContactTest.get();
 
-    await prismaClient.address.create({
-      data: {
-        street: "Jalan",
-        city: "Kota",
-        province: "Provinsi",
-        country: "Negara",
-        postal_code: "123123",
-        contact_id: contact.id,
-      },
+    await prismaClient.address.createMany({
+      data: [
+        {
+          street: "Jalan",
+          city: "Kota",
+          province: "Provinsi",
+          country: "Negara",
+          postal_code: "123123",
+          contact_id: contact.id,
+        },
+        {
+          street: "Jalan 1",
+          city: "Kota 1",
+          province: "Provinsi 1",
+          country: "Negara 1",
+          postal_code: "1231231",
+          contact_id: contact.id,
+        },
+        {
+          street: "Jalan 2",
+          city: "Kota 2",
+          province: "Provinsi 2",
+          country: "Negara 2",
+          postal_code: "1231232",
+          contact_id: contact.id,
+        },
+        {
+          street: "Jalan 3",
+          city: "Kota 3",
+          province: "Provinsi 3",
+          country: "Negara 3",
+          postal_code: "1231233",
+          contact_id: contact.id,
+        },
+      ],
     });
   }
 
@@ -124,12 +150,27 @@ export class AddressTest {
     const address = await prismaClient.address.findFirst({
       where: {
         street: "Jalan",
+        postal_code: "123123",
       },
     });
 
     if (!address) {
       throw new Error("Address is not found");
     }
+
+    return address;
+  }
+
+  static async search(
+    addressId: number,
+    contactId: number
+  ): Promise<Address | null> {
+    const address = await prismaClient.address.findFirst({
+      where: {
+        id: addressId,
+        contact_id: contactId,
+      },
+    });
 
     return address;
   }

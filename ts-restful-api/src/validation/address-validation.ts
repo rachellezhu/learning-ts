@@ -12,10 +12,11 @@ export class AddressValidation {
 
   static readonly UPDATE: ZodType = z.object({
     id: z.number().positive(),
-    first_name: z.string().min(1).max(100),
-    last_name: z.string().min(1).max(100),
-    email: z.string().min(1).max(100),
-    phone: z.string().min(1).max(20),
+    street: z.string().min(1).max(255).optional(),
+    city: z.string().min(1).max(100).optional(),
+    province: z.string().min(1).max(100).optional(),
+    country: z.string().min(1).max(100),
+    postal_code: z.string().min(1).max(10),
   });
 
   static readonly SEARCH: ZodType = z.object({
